@@ -7,15 +7,18 @@ import { Label } from "../ui/label"
 import { Input } from "../ui/input"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
+import { Form } from "@/components/ui/form"
+import CustomFormField from "./CustomFormField"
+
+export enum FormFieldType {
+  INPUT= 'input',
+  TEXTAREA= 'textarea',
+  PHONE_INPUT= 'phoneIput',
+  CHECKBOX= 'checkbox',
+  DATE_PICKER= 'datePicker',
+  SELECT= 'select',
+  SKELETON= 'skeleton'
+}
 
 const formSchema = z.object({
   fullname: z.string().min(2, {
@@ -51,53 +54,32 @@ const PatientForm = () => {
           <h1 className='header'>Hi there, ...</h1>
           <p className='text-dark-700'>Get Started with Appointments.</p>
         </section>
-        <FormField
+        <CustomFormField 
           control={form.control}
+          fieldType={FormFieldType.INPUT}
           name="fullname"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Full name</FormLabel>
-              <FormControl>
-                <Input placeholder="ex. Adam" {...field} />
-              </FormControl>
-              {/* <FormDescription>
-                      This is your public display name.
-                    </FormDescription> */}
-              <FormMessage />
-            </FormItem>
-          )}
+          label="Full name"
+          placeholder="ex. Adam"
+          iconSrc="/assets/icons/user.svg"
+          iconAlt="user-icon"
         />
-        <FormField
+        <CustomFormField 
           control={form.control}
+          fieldType={FormFieldType.INPUT}
           name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email address</FormLabel>
-              <FormControl>
-                <Input placeholder="example@demo.com" {...field} />
-              </FormControl>
-              {/* <FormDescription>
-                      This is your public display name.
-                    </FormDescription> */}
-              <FormMessage />
-            </FormItem>
-          )}
+          label="Email address"
+          placeholder="ex. john@example.com"
+          iconSrc="/assets/icons/email.svg"
+          iconAlt="email-icon"
         />
-        <FormField
+        <CustomFormField 
           control={form.control}
+          fieldType={FormFieldType.INPUT}
           name="phone"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Phone number</FormLabel>
-              <FormControl>
-                <Input type="number" placeholder="989456784" {...field} />
-              </FormControl>
-              {/* <FormDescription>
-                      This is your public display name.
-                    </FormDescription> */}
-              <FormMessage />
-            </FormItem>
-          )}
+          label="Phone number"
+          placeholder="ex. 9876542273"
+          iconSrc=""
+          iconAlt=""
         />
         <Button type="submit">Submit</Button>
       </form>
