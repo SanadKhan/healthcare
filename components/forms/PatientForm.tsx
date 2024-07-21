@@ -9,6 +9,9 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Form } from "@/components/ui/form"
 import CustomFormField from "./CustomFormField"
+import SubmitButton from "../SubmitButton"
+import { useState } from "react"
+import { UserFormValidation } from "@/lib/validation"
 
 export enum FormFieldType {
   INPUT= 'input',
@@ -20,30 +23,19 @@ export enum FormFieldType {
   SKELETON= 'skeleton'
 }
 
-const formSchema = z.object({
-  fullname: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-  email: z.string().email({ message: "Invalid Email " }),
-  phone: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-})
-
 const PatientForm = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+
+  const form = useForm<z.infer<typeof UserFormValidation>>({
+    resolver: zodResolver(UserFormValidation),
     defaultValues: {
-      fullname: "",
+      name: "",
       email: "",
       phone: "",
     },
   })
 
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
+  function onSubmit(values: z.infer<typeof UserFormValidation>) {
     console.log(values)
   }
 
@@ -57,11 +49,11 @@ const PatientForm = () => {
         <CustomFormField 
           control={form.control}
           fieldType={FormFieldType.INPUT}
-          name="fullname"
+          name="name"
           label="Full name"
           placeholder="ex. Adam"
           iconSrc="/assets/icons/user.svg"
-          iconAlt="user-icon"
+          iconAlt="user"
         />
         <CustomFormField 
           control={form.control}
@@ -70,18 +62,18 @@ const PatientForm = () => {
           label="Email address"
           placeholder="ex. john@example.com"
           iconSrc="/assets/icons/email.svg"
-          iconAlt="email-icon"
+          iconAlt="email"
         />
         <CustomFormField 
           control={form.control}
-          fieldType={FormFieldType.INPUT}
+          fieldType={FormFieldType.PHONE_INPUT}
           name="phone"
           label="Phone number"
           placeholder="ex. 9876542273"
-          iconSrc=""
-          iconAlt=""
+          iconSrc="/assets/icons/phone.svg"
+          iconAlt="phone"
         />
-        <Button type="submit">Submit</Button>
+        <SubmitButton isLoading={isLoading}> Get Started </SubmitButton>
       </form>
     </Form>
   )
