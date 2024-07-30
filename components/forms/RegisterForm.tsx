@@ -17,6 +17,7 @@ import { Label } from '../ui/label';
 import { SelectItem } from '../ui/select';
 import Image from 'next/image';
 import FileUploader from '../FileUploader';
+// import { getBufferImage } from '@/lib/utils';
 
 const RegisterForm = ({ user }: { user: User }) => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -35,12 +36,15 @@ const RegisterForm = ({ user }: { user: User }) => {
 
     async function onSubmit(values: z.infer<typeof PatientFormValidation>) {
         setIsLoading(true)
+        console.log("submit values",values );
+        
         let formData
-        if (values.identificationDocument && values.identificationDocument.length > 0) {
+        if (values.identificationDocument && values.identificationDocument?.length > 0) {
             const blobFile = new Blob([values.identificationDocument[0]], {
                 type: values.identificationDocument[0].type
             })
-            console.log("blobFIle", blobFile.size>0, blobFile);
+            // console.log("blobFIle", blobFile.size>0, blobFile);
+            // const blobFile: Buffer = await getBufferImage(values.identificationDocument[0])
             
             formData = new FormData()
             formData.append('blobFile', blobFile)
@@ -53,9 +57,10 @@ const RegisterForm = ({ user }: { user: User }) => {
                 birthDate: new Date(values.birthDate),
                 identificationDocument: formData
             }
+            console.log("patietn data", patientData);
             
-            const patient = await registerPatient(patientData)
-            if (patient) router.push(`/patients/${user.$id}/new-appointment`)
+            const newPatient = await registerPatient(patientData)
+            if (newPatient) router.push(`/patients/${user.$id}/new-appointment`)
         } catch (error) {
             console.log(error)
         }
