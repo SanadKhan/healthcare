@@ -8,7 +8,7 @@ import React, { useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Form, FormControl } from '../ui/form';
-import CustomFormField from './CustomFormField';
+import CustomFormField from '../CustomFormField';
 import { FormFieldType } from './PatientForm';
 import SubmitButton from '../SubmitButton';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
@@ -43,8 +43,6 @@ const RegisterForm = ({ user }: { user: User }) => {
             const blobFile = new Blob([values.identificationDocument[0]], {
                 type: values.identificationDocument[0].type
             })
-            // console.log("blobFIle", blobFile.size>0, blobFile);
-            // const blobFile: Buffer = await getBufferImage(values.identificationDocument[0])
             
             formData = new FormData()
             formData.append('blobFile', blobFile)
