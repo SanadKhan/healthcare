@@ -1,9 +1,10 @@
-import { getUser } from '@/lib/actions/patient.actions'
+import AppointmentForm from '@/components/forms/AppointmentForm'
+import { getPatient, getUser } from '@/lib/actions/patient.actions'
 import Image from 'next/image'
 import React from 'react'
 
 const NewAppointment = async({ params: { userId }}: SearchParamProps) => {
-    const user = await getUser(userId)
+    const patient = await getPatient(userId)
     return (
         <div className="flex h-screen max-h-screen">
             <section className="remove-scrollbar container">
@@ -16,6 +17,11 @@ const NewAppointment = async({ params: { userId }}: SearchParamProps) => {
                         className="mb-12 h-10 w-fit"
                     />
                     {/* <RegisterForm user={user} /> */}
+                    <AppointmentForm 
+                        type="create"
+                        userId={userId}
+                        patientId={patient.$id}
+                    />
                         
                     <p className="copyright py-10">© 2024 CarePulse</p>
                 </div>
