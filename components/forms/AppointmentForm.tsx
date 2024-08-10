@@ -1,6 +1,6 @@
 "use client"
 
-import { CreateAppointmentSchema } from '@/lib/validation';
+import { getAppointmentSchema } from '@/lib/validation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
@@ -13,6 +13,7 @@ import { Doctors } from '@/constants';
 import { SelectItem } from '../ui/select';
 import Image from 'next/image';
 import SubmitButton from '../SubmitButton';
+import { createAppointment } from '@/lib/actions/appointment.action';
 
 const AppointmentForm = ({
     type, userId, patientId
@@ -24,10 +25,12 @@ const AppointmentForm = ({
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const router = useRouter();
 
-    const form = useForm<z.infer<typeof CreateAppointmentSchema>>({
-        resolver: zodResolver(CreateAppointmentSchema),
+    const AppointmentFormValidation  = getAppointmentSchema(type)
+
+    const form = useForm<z.infer<typeof AppointmentFormValidation>>({
+        resolver: zodResolver(AppointmentFormValidation),
         defaultValues: {
-            doctor: "",
+            primaryPhysician: "",
             schedule: new Date(Date.now()),
             reason: "",
             note: "",
@@ -35,29 +38,40 @@ const AppointmentForm = ({
         },
     })
 
-    async function onSubmit(values: z.infer<typeof CreateAppointmentSchema>) {
-        setIsLoading(true)
-        console.log("submit values", values);
+    async function onSubmit(values: z.infer<typeof AppointmentFormValidation>) {
+        setIsLoading(true);
 
-        // let formData
-        // if (values.identificationDocument && values.identificationDocument?.length > 0) {
-        //     const blobFile = new Blob([values.identificationDocument[0]], {
-        //         type: values.identificationDocument[0].type
-        //     })
-
-        //     formData = new FormData()
-        //     formData.append('blobFile', blobFile)
-        //     formData.append('fileName', values.identificationDocument[0].name)
-        // }
+        let status;
+        switch (type) {
+            case 'schedule':
+                status = 'schedule'
+                break;
+            case 'cancel':
+                status = 'cancelled'
+                break;
+            default:
+                status = 'pending'
+                break;
+        }
         try {
-            const appointmentData = {
-                ...values,
-                birthDate: new Date(values.schedule),
+            if(type==='create' && patientId){
+                const appointmentData = {
+                    userId,
+                    patient: patientId,
+                    primaryPhysician: values.primaryPhysician,
+                    schedule: new Date(values.schedule),
+                    reason: values.reason!,
+                    note: values.note,
+                    status: status as Status
+                }
+                const  appointment= await createAppointment(appointmentData)
+                console.log("data",appointment);
+                
+                if(appointment) {
+                    form.reset();
+                    router.push(`/patients/${userId}/new-appointment/success?appointmentId=${appointment.$id}`)
+                }
             }
-            console.log("patietn data", appointmentData);
-            // regsiter patient
-            // const newAppointment = await registerPatient(appointmentData)
-            // if (newAppointment) router.push(`/patients/${user.$id}/new-appointment`)
         } catch (error) {
             console.log(error)
         }
