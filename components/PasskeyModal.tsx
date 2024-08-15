@@ -54,22 +54,23 @@ const PasskeyModal = ({ isAdminModal }: { isAdminModal : boolean }) => {
                 </AlertDialogHeader>
                 <div>
                     <InputOTP maxLength={6} value={passkey} onChange={(value) => setPasskey(value as any)}>
-                        <InputOTPGroup>
-                            <InputOTPSlot index={0} />
-                            <InputOTPSlot index={1} />
-                            <InputOTPSlot index={2} />
+                        <InputOTPGroup className="me-shad-input-group">
+                            <InputOTPSlot className="me-shad-input-slot" index={0} />
+                            <InputOTPSlot className="me-shad-input-slot" index={1} />
+                            <InputOTPSlot className="me-shad-input-slot" index={2} />
+                            <InputOTPSlot className="me-shad-input-slot" index={3} />
+                            <InputOTPSlot className="me-shad-input-slot" index={4} />
+                            <InputOTPSlot className="me-shad-input-slot" index={5} />
                         </InputOTPGroup>
-                        <InputOTPSeparator />
-                        <InputOTPGroup>
-                            <InputOTPSlot index={3} />
-                            <InputOTPSlot index={4} />
-                            <InputOTPSlot index={5} />
-                        </InputOTPGroup>
+                        {/* <InputOTPGroup>
+                            <InputOTPSlot className="me-shad-input-slot" index={3} />
+                            <InputOTPSlot className="me-shad-input-slot" index={4} />
+                            <InputOTPSlot className="me-shad-input-slot" index={5} />
+                        </InputOTPGroup> */}
                     </InputOTP>
                 </div>
                 <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction>Continue</AlertDialogAction>
+                    <AlertDialogAction className="bg-green-500 w-full">Enter Admin Panel</AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

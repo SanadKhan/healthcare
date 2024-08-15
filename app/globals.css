@@ -348,3 +348,15 @@
 .PhoneInputInput::placeholder {
   color: #1a1d21;
 }
+
+/* CUSTOME MANAGED BY ME */
+/* SHAD OVERRIDE */
+
+@layer custom-utilities {
+  .me-shad-input-group{
+    @apply flex w-full justify-center items-center gap-2 !important
+  }
+  .me-shad-input-slot{
+    @apply bg-dark-300 border border-dark-500 focus:border-green-500 text-green-500 text-[40px] leading-[60px] font-medium size-16 p-5 !important
+  }
+}
