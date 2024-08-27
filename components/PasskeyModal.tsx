@@ -16,13 +16,14 @@ import {
     InputOTPSeparator,
     InputOTPSlot,
   } from "@/components/ui/input-otp"
-import { encryptKey } from "@/lib/utils";
+import { decryptKey, encryptKey } from "@/lib/utils";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react"
 
 const PasskeyModal = ({ isAdminModal }: { isAdminModal : boolean }) => {
     const router = useRouter()
+    const path = usePathname()
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [passkey, setPasskey] = useState('');
     const [error, setError] = useState('');
@@ -31,14 +32,28 @@ const PasskeyModal = ({ isAdminModal }: { isAdminModal : boolean }) => {
         setIsOpen(isAdminModal)
     },[])
 
-    const handleOnClickAdmin = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>{
+    const encryptedKey = typeof window !== undefined ? window.localStorage.getItem('accessKey') : null
+    useEffect(() => {
+        const accessKey = encryptedKey && decryptKey(encryptedKey)
+        if(path){
+            if(accessKey === process.env.NEXT_PUBLIC_ADMIN_PASSKEY){
+                setIsOpen(false)
+                router.push('/admin')
+            } else {
+                setIsOpen(true)
+            }
+        }
+    },[encryptedKey])
+
+    const validatePasskey = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>{
         e.preventDefault();
-        console.log("values", passkey)
         if(passkey === process.env.NEXT_PUBLIC_ADMIN_PASSKEY) {
             const encryptedKey = encryptKey(passkey)
-            console.log("encrypt", encryptedKey)
-        }   
-        setError("Invalid passkey, please try again!")
+            localStorage.setItem("accessKey", encryptedKey)
+            setIsOpen(false)
+        } else {
+            setError("Invalid passkey, please try again!")
+        }
     }
 
     const closeModal = () => {
@@ -83,7 +98,7 @@ const PasskeyModal = ({ isAdminModal }: { isAdminModal : boolean }) => {
                     )}
                 </div>
                 <AlertDialogFooter>
-                    <AlertDialogAction className="shad-primary-btn w-full" onClick={handleOnClickAdmin}>
+                    <AlertDialogAction className="shad-primary-btn w-full" onClick={validatePasskey}>
                         Enter Admin Panel
                     </AlertDialogAction>
                 </AlertDialogFooter>

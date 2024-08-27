@@ -1,6 +1,6 @@
 "use server"
 
-import { ID } from "node-appwrite";
+import { ID, Query } from "node-appwrite";
 import { APPOINTMENT_COLLECTION_ID, database, DATABASE_ID } from "../appwrite.config";
 import { parseStringify } from "../utils";
 
@@ -32,3 +32,25 @@ export const getAppointment = async(appointmentId: string) => {
         console.log("GET_APPOINTMENT_ERROR",error);
     }
 }
+
+export const getFilteredAppointment = async(status: string) => {
+    try {
+        const filteredAppointment = await database.listDocuments(
+            DATABASE_ID!,
+            APPOINTMENT_COLLECTION_ID!,
+            [ 
+                Query.equal('status', status) 
+            ]
+        )
+        return parseStringify(filteredAppointment)
+
+    } catch (error) {
+        console.log("GET_SCHEDULE_APPOINTMENT");
+    }
+}
+// export const getPendingAppointment = async() => {
+
+// }
+// export const getCancelledAppointment = async() => {
+
+// }
