@@ -1,30 +1,37 @@
+import clsx from 'clsx';
 import Image from 'next/image';
 import React from 'react'
 
 type StatCardProps = {
+    type: 'pending'|'appointments'|'cancelled';
     icon: string;
     count: number;
     label: string;
 }
 
 const StatCard: React.FC<StatCardProps> = ({
+    type,
     icon,
     count,
     label
 }) => {
   return (
-    <div className='p-4 bg-black space-y-4 rounded-lg w-full'>
-        <div className='flex gap-2'>
+    <div className={clsx('stat-card', {
+        'bg-appointments': type === 'appointments',
+        'bg-pending': type === 'pending',
+        'bg-cancelled': type === 'cancelled'
+    } )}>
+        <div className='flex items-center gap-2'>
             <Image
                 src={icon}
-                alt='appointment-icon'
-                height={400}
-                width={400}
-                className='h-6 w-fit'
+                alt={label}
+                height={32}
+                width={32}
+                className='h-8 w-fit'
             />
-            <span>{count}</span>
+            <h2 className='text-32-bold'>{count}</h2>
         </div>
-        <p>{label}</p>
+        <p className='text-14-regular'>{label}</p>
     </div>
   )
 }

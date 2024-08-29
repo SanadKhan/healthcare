@@ -24,19 +24,22 @@ const Admin = () => {
             </section>
             <section className='flex gap-4 justify-between'>
                 <StatCard 
+                    type='appointments'
                     icon="/assets/icons/appointments.svg"
                     count={0}
-                    label="some descp"
+                    label="Total number of scheduled appointments"
                 />
                 <StatCard 
+                    type='pending'
                     icon="/assets/icons/pending.svg"
                     count={0}
-                    label="some descp"
+                    label="Total number of pending appointments"
                 />
                 <StatCard 
+                    type='cancelled'
                     icon="/assets/icons/cancelled.svg"
                     count={0}
-                    label="some descp"
+                    label="Total number of cancelled  appointments"
                 />
             </section>
         </main>
